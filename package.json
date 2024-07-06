@@ -4,12 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
+    "start": "cross-env NODE_ENV=production node index.js",
+    "dev": "cross-env NODE_ENV=development nodemon index.js",
+    "test": "cross-env NODE_ENV=test node --test",
     "deploy": "fly deploy",
     "logs:prod": "fly logs",
-    "lint": "eslint .",
-    "test": "node --test"
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
@@ -30,9 +30,11 @@
     "@eslint/js": "^9.6.0",
     "@flydotio/dockerfile": "^0.5.7",
     "@stylistic/eslint-plugin-js": "^2.3.0",
+    "cross-env": "^7.0.3",
     "eslint": "^9.6.0",
     "globals": "^15.8.0",
-    "nodemon": "^3.1.4"
+    "nodemon": "^3.1.4",
+    "supertest": "^7.0.0"
   },
   "dependencies": {
     "cors": "^2.8.5",
