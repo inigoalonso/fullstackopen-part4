@@ -5,5 +5,5 @@ Content-Type: application/json
   "title": "Wow",
   "author": "Iñigo Alonso Fernandez",
   "url": "42",
-  "likes": "42",
+  "likes": 42
 }
