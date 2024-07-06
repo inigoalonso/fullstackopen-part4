@@ -1,0 +1,9 @@
+POST https://fullstackopen-part4.fly.dev/api/blogs
+Content-Type: application/json
+
+{
+  "title": "Wow",
+  "author": "Iñigo Alonso Fernandez",
+  "url": "42",
+  "likes": "42",
+}
