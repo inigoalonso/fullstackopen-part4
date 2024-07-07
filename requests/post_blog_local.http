@@ -1,6 +1,6 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImluaWdvYWxvbnNvMyIsImlkIjoiNjY4YWFkNDM3NTgyYmIzY2JlYTgyY2ZiIiwiaWF0IjoxNzIwMzY0NzYwfQ.eg-AQMnSkbTdCB7AFvcyNv5lfDqVunLRoHcEfo5dd0Y
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImluaWdvYWxvbnNvMyIsImlkIjoiNjY4YWFkNDM3NTgyYmIzY2JlYTgyY2ZiIiwiaWF0IjoxNzIwMzY5NTE4LCJleHAiOjE3MjAzNzMxMTh9.fC_VruD61s_RuHIRwm4hpJEom5Ep822Wd806y65bEn8
 
 {
   "title": "Need login?",

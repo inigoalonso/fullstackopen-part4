@@ -1,30 +1,20 @@
 const config = require('./utils/config')
 const express = require('express')
-const app = express()
 const cors = require('cors')
+const mongoose = require('mongoose')
+const logger = require('./utils/logger')
 const middleware = require('./utils/middleware')
 const blogsRouter = require('./controllers/blogs')
 const usersRouter = require('./controllers/users')
 const loginRouter = require('./controllers/login')
-const logger = require('./utils/logger')
-const mongoose = require('mongoose')
 
-// const blogSchema = new mongoose.Schema({
-//   title: String,
-//   author: String,
-//   url: String,
-//   likes: Number
-// })
+const app = express()
 
-// const Blog = mongoose.model('Blog', blogSchema)
-
+// Setup mongoose to use the MongoDB connection
 // Define the URL for the MongoDB database
 const url = config.MONGODB_URI
-
 mongoose.set('strictQuery', false)
-
 logger.info('connecting to', url)
-
 mongoose.connect(url)
   .then(() => {
     logger.info('connected to MongoDB')
@@ -33,44 +23,26 @@ mongoose.connect(url)
     logger.error('error connection to MongoDB:', error.message)
   })
 
-// Define the tokenExtractor middleware
-app.use(middleware.tokenExtractor)
-
-app.get('/', (request, response) => {
-  response.send('<h1>Hello World!</h1>')
-})
-
-// app.get('/api/blogs', (request, response) => {
-//   Blog
-//     .find({})
-//     .then(blogs => {
-//       response.json(blogs)
-//     })
-// })
-
-// app.post('/api/blogs', (request, response, next) => {
-//   try {
-//     const blog = new Blog(request.body)
-//     console.log('blog:', blog)
-//     blog
-//       .save()
-//       .then(result => {
-//         response.status(201).json(result)
-//       })
-//       .catch((error) => next(error))
-//   } catch (error) {
-//     next(error) // Forward to error handling middleware
-//   }
-// })
+// Middleware
 app.use(cors())
 app.use(express.static('dist'))
 app.use(express.json())
 app.use(middleware.requestLogger)
 
-app.use('/api/blogs', blogsRouter)
+// Define the tokenExtractor middleware
+app.use(middleware.tokenExtractor)
+
+// Route handlers
+app.use('/api/blogs', middleware.userExtractor, blogsRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/login', loginRouter)
 
+// Define the root route handler
+app.get('/', (request, response) => {
+  response.send('<h1>Hello World!</h1>')
+})
+
+// Error handling middleware
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
 
