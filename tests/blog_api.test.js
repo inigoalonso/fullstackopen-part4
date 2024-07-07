@@ -37,6 +37,45 @@ describe('blogApi', () => {
 
     })
   })
+
+  test('a valid blog post can be added', async () => {
+    const newBlog = {
+      title: 'An interesting blog post',
+      author: 'Linus',
+      url: 'http://example.com/interesting',
+      likes: 1985
+    }
+
+    // Get initial blogs count
+    const initialBlogs = await api.get('/api/blogs')
+    const initialLength = initialBlogs.body.length
+
+    // Post a new blog
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    // Get blogs after adding a new one
+    const response = await api.get('/api/blogs')
+    const blogsAtEnd = response.body
+
+    // Verify the number of blogs increased by one
+    assert.strictEqual(blogsAtEnd.length, initialLength + 1)
+
+    // Verify the content of the blog post
+    const titles = blogsAtEnd.map(blog => blog.title)
+    assert(titles.includes(newBlog.title))
+
+    // Delete the added blog post
+    const addedBlog = blogsAtEnd.find(blog => blog.title === newBlog.title)
+    await api.delete(`/api/blogs/${addedBlog.id}`).expect(204)
+
+    // Verify the number of blogs is back to the initial count
+    const finalBlogs = await api.get('/api/blogs')
+    assert.strictEqual(finalBlogs.body.length, initialLength)
+  })
 })
 
 after(async () => {
