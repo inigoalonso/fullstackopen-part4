@@ -160,6 +160,45 @@ describe('blogApi', () => {
       assert(!titles.includes(newBlog.title))
     })
   })
+
+  describe('Updating blogs', () => {
+    test('a blog post can be updated', async () => {
+      const newBlog = {
+        title: 'Before',
+        author: 'Original',
+        url: 'http://example.com/before',
+        likes: 0
+      }
+
+      // Add a new blog to make sure there is something to update
+      const addedBlog = await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+      const updatedBlog = {
+        title: 'After',
+        author: 'New gal',
+        url: 'http://example.com/after',
+        likes: 42
+      }
+
+      // Update the newly added blog
+      const response = await api
+        .put(`/api/blogs/${addedBlog.body.id}`)
+        .send(updatedBlog)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+
+      // Verify the blog is actually updated with the new content
+      const updatedBlogResponse = response.body
+      assert.strictEqual(updatedBlogResponse.title, updatedBlog.title)
+      assert.strictEqual(updatedBlogResponse.author, updatedBlog.author)
+      assert.strictEqual(updatedBlogResponse.url, updatedBlog.url)
+      assert.strictEqual(updatedBlogResponse.likes, updatedBlog.likes)
+    })
+  })
 })
 
 after(async () => {
