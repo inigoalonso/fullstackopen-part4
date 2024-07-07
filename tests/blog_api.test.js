@@ -26,7 +26,7 @@ describe('blogApi', () => {
       const response = await api.get('/api/blogs')
 
       const titles = response.body.map(e => e.title)
-    // is the argument truthy
+      // is the argument truthy
       assert(titles.includes('Moby Dick'))
     })
 
@@ -37,6 +37,7 @@ describe('blogApi', () => {
         assert.strictEqual(blog.hasOwnProperty('id'), true, 'Blog post should have an id property')
         assert.strictEqual(blog.hasOwnProperty('_id'), false, 'Blog post should not have an _id property')
 
+      })
     })
   })
 
@@ -127,6 +128,36 @@ describe('blogApi', () => {
         .post('/api/blogs')
         .send(newBlog)
         .expect(400)
+    })
+  })
+
+  describe('Deleting blogs', () => {
+    test('a single blog post can be deleted', async () => {
+      const newBlog = {
+        title: 'Rubish',
+        author: 'Pariah',
+        url: 'http://example.com/rubish',
+        likes: 0
+      }
+
+      // Add a new blog to ensure there is one to delete
+      const addedBlog = await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+      // Delete the newly added blog
+      await api
+        .delete(`/api/blogs/${addedBlog.body.id}`)
+        .expect(204)
+
+      // Verify the blog is actually deleted
+      const response = await api.get('/api/blogs')
+      const blogsAfterDeletion = response.body
+
+      const titles = blogsAfterDeletion.map(blog => blog.title)
+      assert(!titles.includes(newBlog.title))
     })
   })
 })
