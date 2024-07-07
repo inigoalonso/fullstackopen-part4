@@ -82,7 +82,7 @@ describe('userApi', () => {
   test('creation fails if username is missing', async () => {
     const noUsernameUser = {
       name: 'User',
-      password: 'validpassword'
+      password: 'password'
     }
 
     const response = await api
