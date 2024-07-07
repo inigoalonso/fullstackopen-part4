@@ -99,6 +99,32 @@ describe('blogApi', () => {
     // Delete the added blog post
     await api.delete(`/api/blogs/${savedBlog.id}`).expect(204)
   })
+
+  test('a blog without a title property returns status 400 Bad Request', async () => {
+    const newBlog = {
+      author: 'Iñigo Alonso Fernandez',
+      url: 'http://example.com/urlsisnotmissing',
+      likes: 23
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+  })
+
+  test('a blog without a url property returns status 400 Bad Request', async () => {
+    const newBlog = {
+      title: 'Title is not missing',
+      author: 'Iñigo Alonso Fernandez',
+      likes: 45
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+  })
 })
 
 after(async () => {
