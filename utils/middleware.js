@@ -26,9 +26,9 @@ const errorHandler = (error, request, response, next) => {
   } else if (error.name ===  'JsonWebTokenError') {
     return response.status(401).json({ error: 'token invalid' })
   } else if (error.name === 'TokenExpiredError') {
-    return response.status(401).json({
-      error: 'token expired'
-    })
+    return response.status(401).json({ error: 'token expired' })
+  } else if (error.name === 'MongoError' && error.code === 11000) {
+    return response.status(400).json({ error: 'username already exists' })
   }
 
   next(error)
