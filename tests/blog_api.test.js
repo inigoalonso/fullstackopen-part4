@@ -76,6 +76,29 @@ describe('blogApi', () => {
     const finalBlogs = await api.get('/api/blogs')
     assert.strictEqual(finalBlogs.body.length, initialLength)
   })
+
+  test('if the likes property is missing, it defaults to 0', async () => {
+    const newBlog = {
+      title: 'A boring blog post',
+      author: 'Anonymous',
+      url: 'http://example.com/boring',
+      // no likes sent
+    }
+
+    // Post a new blog
+    const response = await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    // Verify the likes property defaults to 0
+    const savedBlog = response.body
+    assert.strictEqual(savedBlog.likes, 0)
+
+    // Delete the added blog post
+    await api.delete(`/api/blogs/${savedBlog.id}`).expect(204)
+  })
 })
 
 after(async () => {
