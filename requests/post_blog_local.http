@@ -1,8 +1,9 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImluaWdvYWxvbnNvMyIsImlkIjoiNjY4YWFkNDM3NTgyYmIzY2JlYTgyY2ZiIiwiaWF0IjoxNzIwMzY0NzYwfQ.eg-AQMnSkbTdCB7AFvcyNv5lfDqVunLRoHcEfo5dd0Y
 
 {
-  "title": "Wowwwwww",
+  "title": "Need login?",
   "author": "Iñigo Alonso Fernandez",
   "url": "42",
   "likes": 17
