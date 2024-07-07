@@ -33,7 +33,8 @@ mongoose.connect(url)
     logger.error('error connection to MongoDB:', error.message)
   })
 
-
+// Define the tokenExtractor middleware
+app.use(middleware.tokenExtractor)
 
 app.get('/', (request, response) => {
   response.send('<h1>Hello World!</h1>')
