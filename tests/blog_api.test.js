@@ -197,6 +197,9 @@ describe('blogApi', () => {
       assert.strictEqual(updatedBlogResponse.author, updatedBlog.author)
       assert.strictEqual(updatedBlogResponse.url, updatedBlog.url)
       assert.strictEqual(updatedBlogResponse.likes, updatedBlog.likes)
+
+      // Delete the updated blog post
+      await api.delete(`/api/blogs/${updatedBlogResponse.id}`).expect(204)
     })
   })
 })
