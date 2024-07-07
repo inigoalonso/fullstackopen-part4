@@ -27,6 +27,16 @@ describe('blogApi', () => {
     // is the argument truthy
     assert(titles.includes('Moby Dick'))
   })
+
+  test('the unique identifier property of blog posts is named id', async () => {
+    const response = await api.get('/api/blogs')
+    const blogs = response.body
+    blogs.forEach(blog => {
+      assert.strictEqual(blog.hasOwnProperty('id'), true, 'Blog post should have an id property')
+      assert.strictEqual(blog.hasOwnProperty('_id'), false, 'Blog post should not have an _id property')
+
+    })
+  })
 })
 
 after(async () => {
