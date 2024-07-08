@@ -88,6 +88,9 @@ blogsRouter.delete('/:id', async (request, response, next) => {
 
     await Blog.findByIdAndDelete(request.params.id)
     response.status(204).end()
+    // Also remove it from the list of blogs of the user
+    user.blogs = user.blogs.filter(b => b.toString() !== request.params.id)
+    await user.save()
   } catch (error) {
     next(error)
   }
@@ -101,6 +104,7 @@ blogsRouter.put('/:id', async (request, response, next) => {
     author: body.author,
     url: body.url,
     likes: body.likes,
+    user: body.user,
   }
 
   try {
