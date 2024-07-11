@@ -6,6 +6,8 @@ const requestLogger = (request, response, next) => {
   logger.info('Method:', request.method)
   logger.info('Path:  ', request.path)
   logger.info('Body:  ', request.body)
+  logger.info('Status code: ', response.statusCode)
+  logger.info('Response: ', response.body)
   logger.info('---')
   next()
 }
@@ -38,26 +40,57 @@ const tokenExtractor = (request, response, next) => {
   const authorization = request.get('authorization')
   if (authorization && authorization.startsWith('Bearer ')) {
     request.token = authorization.replace('Bearer ', '')
-  } else {
-    request.token = null
+  // } else {
+  //   request.token = null
   }
   next()
+}
+
+const getTokenFrom = request => {
+  const authorization = request.get('authorization')
+  if (authorization && authorization.startsWith('Bearer ')) {
+    return authorization.replace('Bearer ', '')
+  }
+  return null
 }
 
 const userExtractor = async (request, response, next) => {
-  if (request.token) {
-    try {
-      const decodedToken = jwt.verify(request.token, process.env.SECRET)
-      if (decodedToken.id) {
-        request.user = await User.findById(decodedToken.id)
-      }
-    } catch (error) {
-      return response.status(401).json({ error: 'token invalid' })
-    }
+  const token = getTokenFrom(request)
+
+  if (!token) {
+    return response.status(401).json({ error: 'token missimg' })
   }
+
+  const decodedToken = jwt.verify(token, process.env.SECRET)
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: 'token invalid' })
+  }
+
+  const user = await User.findById(decodedToken.id)
+
+  if (!user) {
+    return response.status(401).json({ error: 'user not found' })
+  }
+
+  request.user = user
 
   next()
 }
+
+// const userExtractor = async (request, response, next) => {
+//   if (request.token) {
+//     try {
+//       const decodedToken = jwt.verify(request.token, process.env.SECRET)
+//       if (decodedToken.id) {
+//         request.user = await User.findById(decodedToken.id)
+//       }
+//     } catch (error) {
+//       return response.status(401).json({ error: 'token invalid' })
+//     }
+//   }
+
+//   next()
+// }
 
 module.exports = {
   requestLogger,

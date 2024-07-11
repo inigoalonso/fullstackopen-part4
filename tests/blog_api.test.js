@@ -87,8 +87,8 @@ describe('blogApi', () => {
       const response = await api.get('/api/blogs')
       const blogs = response.body
       blogs.forEach(blog => {
-        assert.strictEqual(blog.hasOwnProperty('id'), true, 'Blog post should have an id property')
-        assert.strictEqual(blog.hasOwnProperty('_id'), false, 'Blog post should not have an _id property')
+        assert.strictEqual(Object.prototype.hasOwnProperty.call(blog, 'id'), true, 'Blog post should have an id property')
+        assert.strictEqual(Object.prototype.hasOwnProperty.call(blog, '_id'), false, 'Blog post should not have an _id property')
 
       })
     })
